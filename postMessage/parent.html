@@ -1,0 +1,43 @@
+<html>
+<head>
+</head>
+<body>
+<h1>Parent</h1>
+<input type="text" id="txt-message" name="txt-message" />
+<button id="btn-send">Send</button>
+<br />
+<br />
+<strong>Chat log:</strong>
+<div id="chat" style="border: 1px solid black; border-radius: 6px; min-height: 100px;">
+</div>
+
+<script language="JavaScript" type="text/javascript">
+let child = null
+document.addEventListener( 'DOMContentLoaded', () => {
+  document.getElementById( 'btn-send' ).addEventListener( 'click', () => {
+	  const message = document.getElementById( 'txt-message' ).value
+	  try{
+			child.postMessage( `parent: ${message}` )
+		}
+		catch( err ){
+			child = window.open( '/postMessage/child.html', 'my-child-window' )
+			setTimeout( () => {
+				child.postMessage( `parent: ${message}` )
+			}, 500 )
+		}
+
+		document.getElementById( 'chat' ).append( `parent: ${message}` )
+		document.getElementById( 'chat' ).appendChild( document.createElement( 'br' ) )
+	})
+	
+	window.addEventListener( "message", receiveMessage, false);
+})
+
+const receiveMessage = evt => {
+  document.getElementById( 'chat' ).append( evt.data )
+	document.getElementById( 'chat' ).appendChild( document.createElement( 'br' ) )
+}
+
+</script>
+</body>
+</html>
